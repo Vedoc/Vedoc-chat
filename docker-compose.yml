@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  mongo:
+    image: mongo:4
+    command: --smallfiles
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+  chat:
+    image: registry.gitlab.com/fruktorum/backend/vedoc-vehicle-doctor/vedoc-chat:development
+    build: .
+    volumes: [ '.:/usr/src/app' ]
+    environment:
+      MONGO_USER: admin
+      MONGO_PASSWORD: password
+      MONGO_DB: vedoc_chat
+      MONGO_HOST: mongo
+      APP_HOST: localhost
+    links:
+      - mongo
+    ports:
+      - 8080:8080
